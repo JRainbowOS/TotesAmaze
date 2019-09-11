@@ -16,9 +16,9 @@ class Network:
 
     def __init__(self):
         self.num_nodes = 1
-        self.start_node = Node(1)
-        self.node_ids = [1]
-        self.nodes = [Node(1)]
+        self.start_node = Node(0)
+        self.node_ids = [0]
+        self.nodes = [Node(0)]
 
     def __repr__(self):
         res = ''
@@ -41,14 +41,14 @@ class Network:
             start_node = self.add_node(start_node_id)
         else:
             if debug: print('2')
-            start_node = self.nodes[start_node_id - 1]
+            start_node = self.nodes[start_node_id]
         if end_node_id not in self.node_ids:
             # create new end node
             if debug: print('3')
             end_node = self.add_node(end_node_id)
         else:
             if debug: print('4')
-            end_node = self.nodes[end_node_id - 1]
+            end_node = self.nodes[end_node_id]
 
         start_node.add_connection(end_node_id, weight)
         end_node.add_connection(start_node_id, weight)
@@ -56,18 +56,18 @@ class Network:
 
 def main():
     network = Network()
-    network.add_path(1,2,3)
-    network.add_path(1,3,1)
-    network.add_path(1,4,2)
-    network.add_path(2,5,3)
-    network.add_path(2,4,4)
-    network.add_path(3,6,6)
-    network.add_path(3,7,5)
-    network.add_path(4,5,3)
-    network.add_path(4,7,2)
-    network.add_path(6,8,2)
-    network.add_path(6,7,3)
-    network.add_path(5,8,1)
+    network.add_path(0,1,3)
+    network.add_path(0,2,1)
+    network.add_path(0,3,2)
+    network.add_path(1,4,3)
+    network.add_path(1,3,4)
+    network.add_path(2,5,6)
+    network.add_path(2,6,5)
+    network.add_path(2,4,3)
+    network.add_path(3,6,2)
+    network.add_path(5,7,2)
+    network.add_path(5,6,3)
+    network.add_path(4,7,1)
     print(network.nodes[6].connections)
     print(str(network.nodes[2]))
     print(network)
