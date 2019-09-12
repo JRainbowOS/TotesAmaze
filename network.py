@@ -41,9 +41,15 @@ class Network:
         start_node.add_connection(end_node_id, weight)
         end_node.add_connection(start_node_id, weight)
 
+    def mark_end(self, node_id):
+        assert node_id in self.node_ids, 'node does not exist!'
+        end_node = self.nodes[node_id]
+        end_node.mark_position('end')
+
 
 def main():
     network = Network()
+    network.nodes[0].mark_position('start')
     network.add_path(0,1,3)
     network.add_path(0,2,1)
     network.add_path(0,3,2)
@@ -56,6 +62,10 @@ def main():
     network.add_path(5,7,2)
     network.add_path(5,6,3)
     network.add_path(4,7,1)
+    network.nodes[7].mark_position('end')
+
+    for node in network.nodes:
+        print(f'{str(node)} at {node.position}')
     print(network.nodes[6].connections)
     print(str(network.nodes[2]))
     print(network)

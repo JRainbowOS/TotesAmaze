@@ -1,0 +1,3 @@
+
+def dijkstra(network):
+    pass
