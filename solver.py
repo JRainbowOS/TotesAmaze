@@ -1,4 +1,3 @@
-# from methods import dijkstra
 
 class Solver:
 
@@ -7,6 +6,7 @@ class Solver:
 
     def solve(self, network):
             if self.method == 'dijkstra':
+                from methods import dijkstra
                 solution = dijkstra(network)
             # elif:
             #     other methods go here

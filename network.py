@@ -65,14 +65,17 @@ def main():
     network.add_path(4,7,1)
     network.nodes[7].mark_position('end')
 
+    print(network.nodes[4].visited)
+    network.nodes[4].mark_visited(True)
+    print(network.nodes[4].visited)
+    
     for node in network.nodes:
         print(f'{str(node)} at {node.position}')
-    print(network.nodes[6].connections)
-    print(str(network.nodes[2]))
     print(network)
 
     solver = Solver('dijkstra')
-    print(solver.method)
+    solution = solver.solve(network)
+    print(solution)
 
 if __name__ == '__main__':
     main()

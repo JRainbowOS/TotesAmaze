@@ -5,18 +5,26 @@ def dijkstra(network):
     """
     Implementation of Dijktra's algorithm for solving path
     """
-    assert isinstance(network, Network), 'network is not from Network class'
-    # First check that network has exactly one start and end point
+    # assert isinstance(network, Network), 'network is not from Network class'
+    # First check that network has exactly one start and end point and find unvisited nodes
     start_id = -1
     end_id = -1
+    unvisited = []
     for node in network.nodes:
         if node.position == 'start':
             start_id = node.id
         if node.position == 'end':
             end_id = node.id
+        if not node.visited:
+            unvisited.append(node.id)
+
     assert start_id != end_id != -1, 'start / end either non-existent or the same!' # TODO: check logic
 
     current_position_id = start_id
+
+    # algorithm terminates when every node has been visited
+    while len(unvisited) > 0:
+        break
 
     return start_id, end_id
 
