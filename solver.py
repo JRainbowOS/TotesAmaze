@@ -1,6 +1,4 @@
-from network import Network
-from node import Node
-from methods import dijkstra
+# from methods import dijkstra
 
 class Solver:
 
@@ -8,9 +6,8 @@ class Solver:
         self.method = method
 
     def solve(self, network):
-        if self.method == 'dijkstra':
-            solution = dijkstra(network)
-        elif:
-            pass
-        return solution
-        
+            if self.method == 'dijkstra':
+                solution = dijkstra(network)
+            # elif:
+            #     other methods go here
+            return solution

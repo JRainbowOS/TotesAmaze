@@ -1,4 +1,5 @@
 from node import Node
+from solver import Solver
 
 class Network:
 
@@ -69,6 +70,9 @@ def main():
     print(network.nodes[6].connections)
     print(str(network.nodes[2]))
     print(network)
+
+    solver = Solver('dijkstra')
+    print(solver.method)
 
 if __name__ == '__main__':
     main()
