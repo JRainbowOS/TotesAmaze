@@ -58,6 +58,15 @@ class Network:
                 unvisited.append(n)
         return unvisited
 
+    def find_smallest_distance_in_node_set(self, list_of_node_ids):
+        """
+        TODO: This should probably use np.argmin and a list comprehension
+        """
+        distances = []
+        for n in list_of_node_ids:
+            distances.append(self.nodes[n].distance)
+        return min(distances), distances.index(min(distances))
+
 
 def main():
     network = Network()

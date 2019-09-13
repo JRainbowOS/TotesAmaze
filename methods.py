@@ -21,7 +21,7 @@ def dijkstra(network):
     assert start_id != end_id != -1, 'start / end either non-existent or the same!' # TODO: check logic
 
     current_position_id = start_id
-    current_distance = 0
+    total_distance = 0
 
     # algorithm terminates when every node has been visited
     while not network.nodes[end_id].visited:
@@ -32,6 +32,21 @@ def dijkstra(network):
         # 5. else select unvisited node with smallest distance and set as new current node
         
         unvisited_neighbours = network.find_unvisited_neighbours(current_position_id)
+        for unvisited_id in unvisited_neighbours:
+            connection_distance = network.nodes[current_position_id].connections[unvisited_id]
+            current_distance = total_distance + connection_distance
+            node_distance = network.nodes[unvisited_id].distance
+            if current_distance < node_distance:
+                print(f'changing distance from {node_distance} to {current_distance}')
+                network.nodes[unvisited_id].change_distance(current_distance)
+        network.nodes[current_position_id].visited = True
+        unvisited.remove(current_position_id)
+
+        if network.find_smallest_distance_in_node_set(unvisited) == float('inf'):
+            # Or should this really be added to the while statement?
+            break
+
+
 
 
 
