@@ -47,6 +47,17 @@ class Network:
         end_node = self.nodes[node_id]
         end_node.mark_position('end')
 
+    def find_unvisited_neighbours(self, current_node_id):
+        """
+        TODO: make this a list comprehension
+        """
+        neighbours = list(self.nodes[current_node_id].connections.keys())
+        unvisited = []
+        for n in neighbours:
+            if not self.nodes[n].visited:
+                unvisited.append(n)
+        return unvisited
+
 
 def main():
     network = Network()
@@ -64,6 +75,9 @@ def main():
     network.add_path(5,6,3)
     network.add_path(4,7,1)
     network.nodes[7].mark_position('end')
+
+    unvisited = network.find_unvisited_neighbours(4)
+    print(unvisited)
 
     print(network.nodes[4].visited)
     network.nodes[4].mark_visited(True)

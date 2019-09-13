@@ -21,9 +21,23 @@ def dijkstra(network):
     assert start_id != end_id != -1, 'start / end either non-existent or the same!' # TODO: check logic
 
     current_position_id = start_id
+    current_distance = 0
 
     # algorithm terminates when every node has been visited
-    while len(unvisited) > 0:
+    while not network.nodes[end_id].visited:
+        # 1. consider unvisited neighbours and calculate tentative distance via current node
+        # 2. compare tentative distances of neighbouring nodes with current distances and assign the smaller
+        # 3. mark the current node as visited and remove from unvisited set
+        # 4. if end node is marked as visited or smallest distances in unvisited set is inf, break
+        # 5. else select unvisited node with smallest distance and set as new current node
+        
+        unvisited_neighbours = network.find_unvisited_neighbours(current_position_id)
+
+
+
+        
+
+
         break
 
     return start_id, end_id
