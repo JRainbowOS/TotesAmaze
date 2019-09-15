@@ -72,11 +72,6 @@ class Network:
         """
         TODO: This should probably use np.argmin and a list comprehension
         """
-        # distances = []
-        # for n in list_of_node_ids:
-        #     distances.append(self.nodes[n].distance)
-        # return list_of_node_ids.index(min(distances)), min(distances)
-
         min_distance = float('inf')
         min_node_id = -1
         for n in list_of_node_ids:
@@ -84,8 +79,6 @@ class Network:
             if distance < min_distance:
                 min_distance = distance
                 min_node_id = n
-        # if min_node_id == -1:
-        #     raise Exception('all distances are infinite!')
         return min_node_id, min_distance
 
     def propagate_tree(self, end_id):
@@ -122,7 +115,7 @@ def main():
 
     solver = Solver('dijkstra')
     solution = solver.solve(network)
-    print(f'minimal distance is {solution[0]} spanning nodes {solution[1]}')
+    print(f'Minimal distance is {solution[0]}, spanning nodes {solution[1]}')
 
 if __name__ == '__main__':
     main()
