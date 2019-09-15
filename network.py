@@ -62,10 +62,22 @@ class Network:
         """
         TODO: This should probably use np.argmin and a list comprehension
         """
-        distances = []
+        # distances = []
+        # for n in list_of_node_ids:
+        #     distances.append(self.nodes[n].distance)
+        # return list_of_node_ids.index(min(distances)), min(distances)
+
+        min_distance = float('inf')
+        min_node_id = -1
         for n in list_of_node_ids:
-            distances.append(self.nodes[n].distance)
-        return min(distances), distances.index(min(distances))
+            distance = self.nodes[n].distance
+            if distance < min_distance:
+                min_distance = distance
+                min_node_id = n
+        # if min_node_id == -1:
+        #     raise Exception('all distances are infinite!')
+        return min_node_id, min_distance
+            
 
 
 def main():

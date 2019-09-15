@@ -1,5 +1,6 @@
 from solver import Solver
 from network import Network
+import time
 
 def dijkstra(network):
     """
@@ -17,13 +18,15 @@ def dijkstra(network):
             end_id = node.id
         if not node.visited:
             unvisited.append(node.id)
+    print(f'unvisited nodes: {unvisited}')
 
     assert start_id != end_id != -1, 'start / end either non-existent or the same!' # TODO: check logic
 
     current_position_id = start_id
     total_distance = 0
+    distance_from_source = 0 
 
-    # algorithm terminates when every node has been visited
+    # algorithm terminates when end node has been visited
     while not network.nodes[end_id].visited:
         # 1. consider unvisited neighbours and calculate tentative distance via current node
         # 2. compare tentative distances of neighbouring nodes with current distances and assign the smaller
@@ -31,6 +34,8 @@ def dijkstra(network):
         # 4. if end node is marked as visited or smallest distances in unvisited set is inf, break
         # 5. else select unvisited node with smallest distance and set as new current node
         
+        print(f'\n\n current position: {current_position_id}')
+        print(f'unvisited nodes: {unvisited}')
         unvisited_neighbours = network.find_unvisited_neighbours(current_position_id)
         for unvisited_id in unvisited_neighbours:
             connection_distance = network.nodes[current_position_id].connections[unvisited_id]
@@ -39,23 +44,24 @@ def dijkstra(network):
             if current_distance < node_distance:
                 print(f'changing distance from {node_distance} to {current_distance}')
                 network.nodes[unvisited_id].change_distance(current_distance)
+        # if not unvisited_neighbours:
         network.nodes[current_position_id].visited = True
         unvisited.remove(current_position_id)
 
-        if network.find_smallest_distance_in_node_set(unvisited) == float('inf'):
-            # Or should this really be added to the while statement?
+        new_position_id, smallest_distance = network.find_smallest_distance_in_node_set(unvisited)
+        print(f'new position: {new_position_id}')
+
+        if smallest_distance == float('inf'):
+            print('all remaining unvisited nodes have infinite distance!')
             break
 
-
-
-
-
+        else:
+            current_position_id = new_position_id
+            total_distance += smallest_distance
         
+        time.sleep(1)
 
-
-        break
-
-    return start_id, end_id
+    return total_distance
 
 def main():
     network = Network()
