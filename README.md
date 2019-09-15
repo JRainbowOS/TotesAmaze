@@ -12,6 +12,6 @@ Network class in network.py groups nodes into a weighted graph.
 Run network.py to see example network being solved using Dijkstra's algorithm.
 
 -------------------------------------------------------------------------------
-TODO: Write Dijkstra's algorthim
+TODO: Modify Dijkstra's algorithm to create A* algorithm
 TODO: Write maze_to_graph that converts a binary raster into a vector graph ready to be solved. 
 
