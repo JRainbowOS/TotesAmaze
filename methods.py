@@ -18,13 +18,12 @@ def dijkstra(network):
             end_id = node.id
         if not node.visited:
             unvisited.append(node.id)
-    print(f'unvisited nodes: {unvisited}')
+    # print(f'unvisited nodes: {unvisited}')
 
     assert start_id != end_id != -1, 'start / end either non-existent or the same!' # TODO: check logic
 
     current_position_id = start_id
-    total_distance = 0
-    distance_from_source = 0 
+    # total_distance = 0
 
     # algorithm terminates when end node has been visited
     while not network.nodes[end_id].visited:
@@ -34,22 +33,23 @@ def dijkstra(network):
         # 4. if end node is marked as visited or smallest distances in unvisited set is inf, break
         # 5. else select unvisited node with smallest distance and set as new current node
         
-        print(f'\n\n current position: {current_position_id}')
-        print(f'unvisited nodes: {unvisited}')
+        # print(f'\n\n current position: {current_position_id}')
+        # print(f'unvisited nodes: {unvisited}')
         unvisited_neighbours = network.find_unvisited_neighbours(current_position_id)
         for unvisited_id in unvisited_neighbours:
+            current_distance = network.nodes[current_position_id].distance
             connection_distance = network.nodes[current_position_id].connections[unvisited_id]
-            current_distance = total_distance + connection_distance
-            node_distance = network.nodes[unvisited_id].distance
-            if current_distance < node_distance:
-                print(f'changing distance from {node_distance} to {current_distance}')
-                network.nodes[unvisited_id].change_distance(current_distance)
-        # if not unvisited_neighbours:
+            alternative_distance = current_distance + connection_distance
+            if alternative_distance < network.nodes[unvisited_id].distance:
+                # print(f'changing distance from {network.nodes[unvisited_id].distance} to {alternative_distance}')
+                network.nodes[unvisited_id].distance = alternative_distance
+                network.nodes[unvisited_id].previous = current_position_id
+
         network.nodes[current_position_id].visited = True
         unvisited.remove(current_position_id)
 
         new_position_id, smallest_distance = network.find_smallest_distance_in_node_set(unvisited)
-        print(f'new position: {new_position_id}')
+        # print(f'new position: {new_position_id}')
 
         if smallest_distance == float('inf'):
             print('all remaining unvisited nodes have infinite distance!')
@@ -57,11 +57,10 @@ def dijkstra(network):
 
         else:
             current_position_id = new_position_id
-            total_distance += smallest_distance
         
-        time.sleep(1)
+    path = network.propagate_tree(end_id)
 
-    return total_distance
+    return network.nodes[end_id].distance, path
 
 def main():
     network = Network()
@@ -73,7 +72,7 @@ def main():
     network.add_path(1,3,4)
     network.add_path(2,5,6)
     network.add_path(2,6,5)
-    network.add_path(2,4,3)
+    network.add_path(3,4,3)
     network.add_path(3,6,2)
     network.add_path(5,7,2)
     network.add_path(5,6,3)
@@ -81,7 +80,7 @@ def main():
     network.nodes[7].mark_position('end')    
 
     solution = dijkstra(network)
-    print(solution)
+    print(f'minimal distance is {solution[0]} spanning nodes {solution[1]}')
 
 if __name__ == '__main__':
     main()

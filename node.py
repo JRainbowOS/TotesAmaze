@@ -6,6 +6,7 @@ class Node:
         self.position = position
         self.visited = visited
         self.distance = float('inf')
+        self.previous = None
     
     def __repr__(self):
         return f'Node({self.id})'
