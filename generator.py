@@ -2,6 +2,7 @@ import numpy as np
 from utils import manhattan_distance
 from random import choice
 import time
+import itertools
 
 class Maze:
 
@@ -35,36 +36,70 @@ class Maze:
         cardinals = []
         if row - 2 >= 0 and (with_value == self.grid[row - 2][col]):
             cardinals.append([row - 2, col])
-        if row + 2 <= self.height and (with_value == self.grid[row + 2][col]):
+        if row + 2 < self.height and (with_value == self.grid[row + 2][col]):
             cardinals.append([row + 2, col])
         if col - 2 >= 0 and (with_value == self.grid[row][col - 2]):
             cardinals.append([row, col - 2])
-        if col + 2 <= self.width and (with_value == self.grid[row][col + 2]):
+        if col + 2 < self.width and (with_value == self.grid[row][col + 2]):
             cardinals.append([row, col + 2])
         
         return cardinals
+
+    def modify_frontiers(self, cell_row, cell_col, current_frontiers):
+        """
+        Removes directly adjacent frontiers and adds any new frontiers
+        """
+        adjacent_cells = []
+        for row in range(cell_row - 1, cell_row + 2, 2):
+            for col in range(cell_col - 1, cell_col + 2, 2):
+                if row >= 0 and row < self.height and col >= 0 and col < self.width:
+                    cell = [row, col]
+                    adjacent_cells.append(cell)
+                    if cell in current_frontiers:
+                        print(f'removing cell {cell} from frontier')
+                        current_frontiers.remove(cell)       
+        # print(f'current_frontiers: {current_frontiers}')
+        candidate_frontiers = self.find_cardinal_cells(cell_row, cell_col, with_value=0)
+        # print(f'candidate_frontiers: {candidate_frontiers}')
+
+        frontiers_duped = candidate_frontiers + current_frontiers
+        frontiers_duped.sort()
+        frontiers = list(frontiers_duped for frontiers_duped, _ in itertools.groupby(frontiers_duped))
+        
+        return frontiers
 
     def generate_maze(self):
         frontiers = self.find_cardinal_cells(self.start_cell_row, self.start_cell_col, with_value=0)
         print(frontiers)
         # algorithm terminates when there are no longer any frontiers
+        iter_count = 0
         while frontiers:
             # 1. select random available frontier
+            # 1b. remove choice from frontiers
             # 2. find random associated cardinal with_value=1 (will be at least one)
             # 3. change the value of the cell between the frontier and its origin (from part 2) to 1 (i.e. a path)
             # 4. remove any frontier cells directly adjacent to new path cell
             # 5. add any new frontier cells
             # 6. choose another random available frontier
 
+            print(frontiers)
             frontier = choice(frontiers)
-            print(frontier)
+            print(f'frontier: {frontier}')
+            frontiers.remove(frontier)
             origin = choice(self.find_cardinal_cells(frontier[0], frontier[1], with_value=1))
-            print(origin)
+            print(f'origin: {origin}')
             new_path_cell = list(np.mean([frontier, origin], axis=0).astype(int))
-            print(new_path_cell)
+            print(f'new_path_cell: {new_path_cell}')
             self.grid[new_path_cell[0]][new_path_cell[1]] = 1
-            time.sleep(1)
+            frontiers = self.modify_frontiers(new_path_cell[0], new_path_cell[1], frontiers)
 
+            time.sleep(0.1)
+            iter_count += 1
+
+            if iter_count > 100:
+                break
+
+        print(self.grid)
 
         pass
 
