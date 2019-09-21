@@ -12,21 +12,21 @@ class Maze:
         self.width = width
         self.height = height
         self.start_cell_row, self.start_cell_col = start_cell_row, start_cell_col
-        self.end_cell_row, self.end_cell_col = end_cell_row, end_cell_col
+        # self.end_cell_row, self.end_cell_col = end_cell_row, end_cell_col
         self.grid = self.create_initial_grid()
 
     def create_initial_grid(self):
         start_cell_row, start_cell_col = self.start_cell_row, self.start_cell_col
-        end_cell_row, end_cell_col = self.end_cell_row, self.end_cell_col
+        # end_cell_row, end_cell_col = self.end_cell_row, self.end_cell_col
         assert start_cell_row < self.height, 'start cell is too far south!'
         # TODO: etc...
 
         grid = np.zeros((self.height, self.width))
         grid[start_cell_row][start_cell_col] = 1
-        grid[end_cell_row][end_cell_col] = 1
-        dist = manhattan_distance(start_cell_row, start_cell_col, end_cell_row, end_cell_col)
-        if dist < 2:
-            raise Exception('start is too close to finish!')
+        # grid[end_cell_row][end_cell_col] = 1
+        # dist = manhattan_distance(start_cell_row, start_cell_col, end_cell_row, end_cell_col)
+        # if dist < 2:
+        #     raise Exception('start is too close to finish!')
         return grid
 
     def find_cardinal_cells(self, row, col, with_value=0):
@@ -103,6 +103,12 @@ class Maze:
 
         pass
 
+    def generate_random_walk_maze(self):
+        unvisited = set[[row, col] for row in range(self.height) for col in range(self.width)]
+        print(len(unvisited))
+        pass
+
+
 def main():
     height, width = 7, 6
     # maze = Maze(height, width, 1, 3, 2, 0)
@@ -110,7 +116,7 @@ def main():
     maze = Maze(width, height, 6, 3, 0, 2)
     # maze = Maze(height, width, 1, 3, 1, 2)
     print(maze.grid)
-    maze.generate_maze()
+    maze.generate_random_walk_maze()
 
 if __name__ == '__main__':
     main() 
