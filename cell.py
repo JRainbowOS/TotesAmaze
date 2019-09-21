@@ -7,6 +7,7 @@ class Cell:
         self.height = height
         self.width = width 
         self.visited = False
+        self.value = 0
 
     def __repr__(self):
         """
@@ -19,6 +20,9 @@ class Cell:
 
     def mark_visited(self):
         self.visited = True
+
+    def mark_maze_path(self):
+        self.value = 1
 
     def valid_neighbours(self):
         """
