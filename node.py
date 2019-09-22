@@ -1,12 +1,15 @@
 class Node:
 
-    def __init__(self, id, position='middle', visited=False):
+    def __init__(self, id, row=None, col=None, position='middle', visited=False):
         self.id = id
+        self.row = row
+        self.col = col 
         self.connections = {}
         self.position = position
         self.visited = visited
         self.distance = float('inf')
         self.previous = None
+        # self.vert = False 
     
     def __repr__(self):
         return f'Node({self.id})'
@@ -22,6 +25,9 @@ class Node:
         self.position = position
         if position == 'start':
             self.distance = 0 
+
+    def mark_vert(self):
+        self.vert = True 
 
     def add_connection(self, new_node_id, weight):
         self.connections[new_node_id] =  weight
