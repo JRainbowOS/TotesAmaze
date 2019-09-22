@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "C:\\Users\\YS15101711\\Anaconda3\\envs\\maze\\python.exe"
+    "python.pythonPath": "C:\\Users\\YS15101711\\Anaconda3\\envs\\maze\\python.exe",
+    "python.linting.enabled": true
 }
