@@ -47,6 +47,7 @@ class Network:
             end_node = self.add_node(end_node_id)
         else:
             if debug: print('4')
+            print(f'available nodes: {self.nodes}')
             end_node = self.nodes[end_node_id]
 
         start_node.add_connection(end_node_id, weight)

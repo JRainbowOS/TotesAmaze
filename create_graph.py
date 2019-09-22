@@ -87,14 +87,22 @@ class Maze:
                     print('WPP')
                     new_node_id = node_ids[-1] + 1
                     new_node = Node(new_node_id, row=r, col=c)
+                    network.add_node(new_node_id)
                     node_ids.append(new_node_id)
                     print('creating new left_node')
                     left_node = new_node_id
                     print(f'left node is now: {left_node}')
                     left_col = c 
-                    if bmp[r - 1][c] == bmp[r + 1][c]:
-                        # i.e. wall above and below or path above and below
+                    if bmp[r - 1][c] == 0 and bmp[r + 1][c] == 0:
+                        # i.e. wall above and below 
                         continue
+                    elif bmp[r - 1][c] == 255 and bmp[r + 1][c] == 255:
+                        # i.e. paths above and below
+                        node_above_id, node_above_row = top_nodes[c]
+                        distance = r - node_above_row
+                        new_node.add_connection(node_above_id, weight=distance)
+                        network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
+                        top_nodes[c] = [new_node_id, r]
                     elif bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # i.e. wall above and path below
                         top_nodes[c] = [new_node_id, r] 
@@ -116,11 +124,13 @@ class Maze:
                     left_col = None
                     if bmp[r - 1][c] == bmp[r + 1][c]:
                         # i.e. wall above and below or path above and below
+                        # in a perfect maze you shouldn't get path surrounded by wall on all sides
                         continue
                     elif bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # i.e. wall above and path below
                         new_node_id = node_ids[-1] + 1
                         new_node = Node(new_node_id, row=r, col=c)
+                        network.add_node(new_node_id)
                         node_ids.append(new_node_id)
                         top_nodes[c] = [new_node_id, r] 
                     elif bmp[r - 1][c] == 255 and bmp[r + 1][c] == 0:
@@ -133,23 +143,33 @@ class Maze:
 
                 # PATH PATH WALL
                 # end of corridor (and and check if vert too)
-                if bmp[r][c - 1] == 255 and bmp[r][c - 1] == 255 and bmp[r][c + 1] == 0:
+                if bmp[r][c - 1] == 255 and bmp[r][c] == 255 and bmp[r][c + 1] == 0:
                     print('PPW')
                     new_node_id = node_ids[-1] + 1
                     new_node = Node(new_node_id, row=r, col=c)
+                    network.add_node(new_node_id)
                     node_ids.append(new_node_id)
-                    print(f'connecting right node to left node {left_node}')
+                    print(f'connecting right node {new_node_id} to left node {left_node}')
                     new_node.add_connection(left_node, c - left_col)
                     network.add_path(new_node_id, left_node, weight=c-left_col)
                     print('destroying left node')
                     left_node = None
                     left_col = None
-                    if bmp[r - 1][c] == bmp[r - 1][c]:
+                    if bmp[r - 1][c] == 255 and bmp[r + 1][c] == 255:
+                        # i.e. end of corridor but with paths above and below
+                        node_above_id, node_above_row = top_nodes[c]
+                        distance = r - node_above_row
+                        new_node.add_connection(node_above_id, weight=distance)
+                        network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
+                        top_nodes[c] = [new_node_id, r]
+                    if bmp[r - 1][c] == 0 and bmp[r + 1][c] == 0:
+                        # i.e. dead end of corridor
                         continue
                     elif bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # i.e. wall above and path below
                         new_node_id = node_ids[-1] + 1
                         new_node = Node(new_node_id, row=r, col=c)
+                        network.add_node(new_node_id)
                         node_ids.append(new_node_id)
                         top_nodes[c] = [new_node_id, r]                         
                     elif bmp[r - 1][c] == 255 and bmp[r + 1][c] == 0:
@@ -162,43 +182,45 @@ class Maze:
                         
                 # PATH PATH PATH 
                 # middle of corridor (check if vert node)
-                if bmp[r][c - 1] == 255 and bmp[r][c - 1] == 255 and bmp[r][c + 1] == 255:
+                if bmp[r][c - 1] == 255 and bmp[r][c] == 255 and bmp[r][c + 1] == 255:
                     print('PPP')
-                    if bmp[r - 1][c] == 0 and bmp[r - 1][c] == 0:
+                    if bmp[r - 1][c] == 0 and bmp[r + 1][c] == 0:
                         # both wall
                         continue
-                    if bmp[r - 1][c] == 255 and bmp[r - 1][c] == 255:
+                    if bmp[r - 1][c] == 255 and bmp[r + 1][c] == 255:
                         # crossroads
                         new_node_id = node_ids[-1] + 1
                         new_node = Node(new_node_id, row=r, col=c)
+                        network.add_node(new_node_id)
                         node_ids.append(new_node_id)
                         node_above_id, node_above_row = top_nodes[c]
                         distance = r - node_above_row
                         new_node.add_connection(node_above_id, weight=distance)
                         network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
                         top_nodes[c] = [new_node_id, r]
-                    if bmp[r - 1][c] == 255 and bmp[r - 1][c] == 0:
+                    if bmp[r - 1][c] == 255 and bmp[r + 1][c] == 0:
                         # T-Junction (North / West / East)
                         new_node_id = node_ids[-1] + 1
                         new_node = Node(new_node_id, row=r, col=c)
+                        network.add_node(new_node_id)
                         node_ids.append(new_node_id)
                         node_above_id, node_above_row = top_nodes[c]
                         distance = r - node_above_row
                         new_node.add_connection(node_above_id, weight=distance)
                         network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
                         top_nodes[c] = [None, None]
-                    if bmp[r - 1][c] == 0 and bmp[r - 1][c] == 255:
+                    if bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # T-Junction (South / West / East)
                         new_node_id = node_ids[-1] + 1
                         new_node = Node(new_node_id, row=r, col=c)
+                        network.add_node(new_node_id)
                         node_ids.append(new_node_id)
                         top_nodes[c] = [new_node_id, r]
 
         # add end node
-        end_row = self.height
+        end_row = self.height - 1
         end_id = node_ids[-1] + 1
         end_col = np.where(bmp[end_row] == 255)[0][0]
-        # end_col = bmp[end_row].index(255)
         end_node = Node(end_id, row=end_row, col=end_col, position='end')
         node_above_id, distance = top_nodes[end_col]
         end_node.add_connection(node_above_id, weight=distance)
