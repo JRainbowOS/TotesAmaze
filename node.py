@@ -6,10 +6,10 @@ class Node:
         self.col = col 
         self.connections = {}
         self.position = position
-        # self.visited = visited
+        self.visited = visited
         self.distance = float('inf')
-        # self.previous = None
-        self.vert = False 
+        self.previous = None
+        # self.vert = False 
     
     def __repr__(self):
         return f'Node({self.id})'

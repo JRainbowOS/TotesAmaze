@@ -3,6 +3,7 @@ import numpy as np
 from skimage.io import imread, imsave
 from node import Node 
 from network import Network
+from solver import Solver
 
 class Maze:
 
@@ -237,6 +238,12 @@ def main():
     bmp, _, _ = maze.get_bmp()
     
     network = maze.bmp_to_graph()
+    network.mark_end(network.node_ids[-1])
+
+    solver = Solver('dijkstra')
+    solution = solver.solve(network)
+    print(f'Minimal distance is {solution[0]}, spanning nodes {solution[1]}')
+
     print(network)
 
 if __name__ == '__main__':
