@@ -114,7 +114,7 @@ class Maze:
                         distance = r - node_above_row
                         new_node.add_connection(node_above_id, weight=distance)
                         network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
-                        top_nodes[c] = [-1, None]
+                        top_nodes[c] = [None, None]
 
 
                 # WALL PATH WALL
@@ -223,8 +223,12 @@ class Maze:
         end_id = node_ids[-1] + 1
         end_col = np.where(bmp[end_row] == 255)[0][0]
         end_node = Node(end_id, row=end_row, col=end_col, position='end')
-        node_above_id, distance = top_nodes[end_col]
+        node_above_id, node_above_row = top_nodes[end_col]
+        distance = end_row - node_above_row
+        print(distance)
+        print(top_nodes)
         end_node.add_connection(node_above_id, weight=distance)
+        print(f'node above end node: {node_above_id}')
         network.add_path(start_node_id=node_above_id, end_node_id=end_id, weight=distance)
 
         return network         
@@ -233,12 +237,20 @@ class Maze:
 
 def main():
     MAZE_TYPE = 'perfect'
-    MAZE_SIZE = '15'
+    MAZE_SIZE = '5'
     maze = Maze(maze_type=MAZE_TYPE, maze_size=MAZE_SIZE)
     bmp, _, _ = maze.get_bmp()
     
     network = maze.bmp_to_graph()
     network.mark_end(network.node_ids[-1])
+
+
+    for n in network.nodes:
+        print(n.row, n.col)
+
+    # print(network.nodes[165].connections)
+    # print(network.nodes[166].connections)
+    # print(network.nodes[167].connections)
 
     solver = Solver('dijkstra')
     solution = solver.solve(network)
