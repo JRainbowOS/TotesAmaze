@@ -87,6 +87,7 @@ class Maze:
                 if bmp[r][c - 1] == 0 and bmp[r][c] == 255 and bmp[r][c + 1] == 255:
                     print('WPP')
                     new_node_id = node_ids[-1] + 1
+                    print(f'creating new node: {new_node_id}')
                     new_node = Node(new_node_id, row=r, col=c)
                     network.add_node(new_node_id)
                     node_ids.append(new_node_id)
@@ -130,6 +131,7 @@ class Maze:
                     elif bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # i.e. wall above and path below
                         new_node_id = node_ids[-1] + 1
+                        print(f'creating new node: {new_node_id}')
                         new_node = Node(new_node_id, row=r, col=c)
                         network.add_node(new_node_id)
                         node_ids.append(new_node_id)
@@ -147,6 +149,7 @@ class Maze:
                 if bmp[r][c - 1] == 255 and bmp[r][c] == 255 and bmp[r][c + 1] == 0:
                     print('PPW')
                     new_node_id = node_ids[-1] + 1
+                    print(f'creating new node: {new_node_id}')
                     new_node = Node(new_node_id, row=r, col=c)
                     network.add_node(new_node_id)
                     node_ids.append(new_node_id)
@@ -168,10 +171,11 @@ class Maze:
                         continue
                     elif bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # i.e. wall above and path below
-                        new_node_id = node_ids[-1] + 1
-                        new_node = Node(new_node_id, row=r, col=c)
-                        network.add_node(new_node_id)
-                        node_ids.append(new_node_id)
+                        # new_node_id = node_ids[-1] + 1
+                        # print(f'creating new node: {new_node_id}')
+                        # new_node = Node(new_node_id, row=r, col=c)
+                        # network.add_node(new_node_id)
+                        # node_ids.append(new_node_id)
                         top_nodes[c] = [new_node_id, r]                         
                     elif bmp[r - 1][c] == 255 and bmp[r + 1][c] == 0:
                         # i.e. path above and wall below
@@ -190,33 +194,51 @@ class Maze:
                         continue
                     if bmp[r - 1][c] == 255 and bmp[r + 1][c] == 255:
                         # crossroads
+                        print('crossroads')
                         new_node_id = node_ids[-1] + 1
+                        print(f'creating new node: {new_node_id}')
                         new_node = Node(new_node_id, row=r, col=c)
                         network.add_node(new_node_id)
                         node_ids.append(new_node_id)
                         node_above_id, node_above_row = top_nodes[c]
                         distance = r - node_above_row
                         new_node.add_connection(node_above_id, weight=distance)
+                        new_node.add_connection(left_node, c - left_col)
+                        network.add_path(start_node_id=new_node_id, end_node_id=left_node, weight = c - left_col)
                         network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
                         top_nodes[c] = [new_node_id, r]
+                        left_node = new_node_id
+                        left_col = c 
                     if bmp[r - 1][c] == 255 and bmp[r + 1][c] == 0:
                         # T-Junction (North / West / East)
+                        print('North T')
                         new_node_id = node_ids[-1] + 1
+                        print(f'creating new node: {new_node_id}')
                         new_node = Node(new_node_id, row=r, col=c)
                         network.add_node(new_node_id)
                         node_ids.append(new_node_id)
                         node_above_id, node_above_row = top_nodes[c]
                         distance = r - node_above_row
                         new_node.add_connection(node_above_id, weight=distance)
+                        new_node.add_connection(left_node, c - left_col)
+                        network.add_path(start_node_id=new_node_id, end_node_id=left_node, weight = c - left_col)
                         network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
                         top_nodes[c] = [None, None]
+                        left_node = new_node_id
+                        left_col = c 
                     if bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # T-Junction (South / West / East)
+                        print('South T')
                         new_node_id = node_ids[-1] + 1
+                        print(f'creating new node: {new_node_id}')
                         new_node = Node(new_node_id, row=r, col=c)
                         network.add_node(new_node_id)
+                        new_node.add_connection(left_node, c - left_col)
+                        network.add_path(start_node_id=new_node_id, end_node_id=left_node, weight = c - left_col)
                         node_ids.append(new_node_id)
                         top_nodes[c] = [new_node_id, r]
+                        left_node = new_node_id
+                        left_col = c 
 
         # add end node
         end_row = self.height - 1
@@ -237,7 +259,7 @@ class Maze:
 
 def main():
     MAZE_TYPE = 'perfect'
-    MAZE_SIZE = '5'
+    MAZE_SIZE = '15'
     maze = Maze(maze_type=MAZE_TYPE, maze_size=MAZE_SIZE)
     bmp, _, _ = maze.get_bmp()
     
@@ -245,8 +267,8 @@ def main():
     network.mark_end(network.node_ids[-1])
 
 
-    for n in network.nodes:
-        print(n.row, n.col)
+    # for n in network.nodes:
+    #     print(n.row, n.col)
 
     # print(network.nodes[165].connections)
     # print(network.nodes[166].connections)
@@ -256,7 +278,7 @@ def main():
     solution = solver.solve(network)
     print(f'Minimal distance is {solution[0]}, spanning nodes {solution[1]}')
 
-    print(network)
+    # print(network)
 
 if __name__ == '__main__':
     main()
