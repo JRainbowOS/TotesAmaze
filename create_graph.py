@@ -173,12 +173,8 @@ class Maze:
                         node_above_id, node_above_row = top_nodes[c]
                         distance = r - node_above_row
                         new_node.add_connection(node_above_id, weight=distance)
-                        new_node.add_connection(left_node, c - left_col)
-                        network.add_path(start_node_id=new_node_id, end_node_id=left_node, weight = c - left_col)
                         network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
                         top_nodes[c] = [new_node_id, r]
-                        left_node = new_node_id
-                        left_col = c 
                     if bmp[r - 1][c] == 255 and bmp[r + 1][c] == 0:
                         # T-Junction (North / West / East)
                         new_node_id = node_ids[-1] + 1
@@ -188,12 +184,8 @@ class Maze:
                         node_above_id, node_above_row = top_nodes[c]
                         distance = r - node_above_row
                         new_node.add_connection(node_above_id, weight=distance)
-                        new_node.add_connection(left_node, c - left_col)
-                        network.add_path(start_node_id=new_node_id, end_node_id=left_node, weight = c - left_col)
                         network.add_path(start_node_id=new_node_id, end_node_id=node_above_id, weight=distance)
                         top_nodes[c] = [None, None]
-                        left_node = new_node_id
-                        left_col = c 
                     if bmp[r - 1][c] == 0 and bmp[r + 1][c] == 255:
                         # T-Junction (South / West / East)
                         new_node_id = node_ids[-1] + 1
@@ -203,8 +195,6 @@ class Maze:
                         network.add_path(start_node_id=new_node_id, end_node_id=left_node, weight = c - left_col)
                         node_ids.append(new_node_id)
                         top_nodes[c] = [new_node_id, r]
-                        left_node = new_node_id
-                        left_col = c 
 
         # add end node
         end_row = self.height - 1
@@ -223,7 +213,7 @@ class Maze:
 
 def main():
     MAZE_TYPE = 'perfect'
-    MAZE_SIZE = '15'
+    MAZE_SIZE = '5'
     maze = Maze(maze_type=MAZE_TYPE, maze_size=MAZE_SIZE)
     bmp, _, _ = maze.get_bmp()
     
@@ -238,7 +228,7 @@ def main():
     print(f'Minimal distance is {solution[0]}, spanning nodes {solution[1]}')
     print(f'Coordinates of solution: {solution[2]}')
 
-    # print(network)
+    print(network)
 
 if __name__ == '__main__':
     main()
