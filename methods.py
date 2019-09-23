@@ -51,9 +51,9 @@ def dijkstra(network):
         else:
             current_position_id = new_position_id
         
-    path, coords = network.propagate_tree(end_id)
+    path = network.propagate_tree(end_id)
 
-    return network.nodes[end_id].distance, path, coords
+    return network.nodes[end_id].distance, path
 
 def main():
     network = Network()
@@ -74,7 +74,6 @@ def main():
 
     solution = dijkstra(network)
     print(f'Minimal distance is {solution[0]}, spanning nodes {solution[1]}')
-    print(f'Coordinates of solution: {solution[2]}')
 
 if __name__ == '__main__':
     main()
