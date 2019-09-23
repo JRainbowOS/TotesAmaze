@@ -25,10 +25,10 @@ class Network:
             res += str(node) + '--'
         return res[:-2]    
 
-    def add_node(self, node_id):
-        assert node_id not in self.node_ids, 'node_id already exists!'
+    def add_node(self, node_id, row=None, col=None):
+        assert node_id == 0 or node_id not in self.node_ids, 'node_id already exists!'
         self.num_nodes += 1
-        new_node = Node(node_id)
+        new_node = Node(node_id, row=row, col=col)
         self.node_ids.append(node_id)
         self.nodes.append(new_node)    
         return new_node
@@ -84,14 +84,18 @@ class Network:
     def propagate_tree(self, end_id):
         path_from_end = [end_id]
         current_node = self.nodes[end_id]
+        coordinates_from_end = [self.nodes[end_id].row, self.nodes[end_id].col]
+        # current_position = [self.nodes[end_id].row, self.nodes[end_id].col]
         while current_node is not None:
             if current_node.previous is None:
                 break 
             else:
                 previous_node = self.nodes[current_node.previous]
                 path_from_end.insert(0, current_node.previous)
+                next_coordinates = [previous_node.row, previous_node.col]
+                coordinates_from_end.insert(0, next_coordinates)
                 current_node = previous_node
-        return path_from_end
+        return path_from_end, coordinates_from_end
         
 @timer
 def main():
