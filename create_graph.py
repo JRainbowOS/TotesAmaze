@@ -231,7 +231,7 @@ class Maze:
 
 def main():
     MAZE_TYPE = 'perfect'
-    MAZE_SIZE = '25'
+    MAZE_SIZE = '5'
     maze = Maze(maze_type=MAZE_TYPE, maze_size=MAZE_SIZE)
     bmp, _, _ = maze.get_bmp()
     
@@ -244,7 +244,10 @@ def main():
 
     for n in solution[1]:
         node = network.nodes[n]
+        print(f'node id: {node.id}')
         print(node.row, node.col)
+        print(node.connections)
+        print('\n')
 
 
 if __name__ == '__main__':
