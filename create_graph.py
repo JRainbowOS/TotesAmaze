@@ -38,9 +38,8 @@ class Maze:
         # 2c. update top_node list for all nodes which have southerly paths
         # 2d. connect bottom_nodes to nearest top_node above  
 
-        # vert_nodes = []
         network = Network()
-        node_ids = []
+        node_ids = network.node_ids
 
         # 1. 
         # Create Start Node
@@ -253,4 +252,3 @@ def main():
 if __name__ == '__main__':
     main()
     
-
