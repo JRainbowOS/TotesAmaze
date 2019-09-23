@@ -266,19 +266,10 @@ def main():
     network = maze.bmp_to_graph()
     network.mark_end(network.node_ids[-1])
 
-
-    # for n in network.nodes:
-    #     print(n.row, n.col)
-
-    # print(network.nodes[165].connections)
-    # print(network.nodes[166].connections)
-    # print(network.nodes[167].connections)
-
     solver = Solver('dijkstra')
     solution = solver.solve(network)
     print(f'Minimal distance is {solution[0]}, spanning nodes {solution[1]}')
 
-    # print(network)
 
 if __name__ == '__main__':
     main()
