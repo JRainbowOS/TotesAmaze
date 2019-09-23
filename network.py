@@ -25,10 +25,10 @@ class Network:
             res += str(node) + '--'
         return res[:-2]    
 
-    def add_node(self, node_id):
-        assert node_id not in self.node_ids, 'node_id already exists!'
+    def add_node(self, node_id, row=None, col=None):
+        assert node_id == 0 or node_id not in self.node_ids, 'node_id already exists!'
         self.num_nodes += 1
-        new_node = Node(node_id)
+        new_node = Node(node_id, row=row, col=col)
         self.node_ids.append(node_id)
         self.nodes.append(new_node)    
         return new_node
@@ -47,7 +47,6 @@ class Network:
             end_node = self.add_node(end_node_id)
         else:
             if debug: print('4')
-            print(f'available nodes: {self.nodes}')
             end_node = self.nodes[end_node_id]
 
         start_node.add_connection(end_node_id, weight)
