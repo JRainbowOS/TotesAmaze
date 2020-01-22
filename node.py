@@ -9,7 +9,6 @@ class Node:
         self.visited = visited
         self.distance = float('inf')
         self.previous = None
-        # self.vert = False 
     
     def __repr__(self):
         return f'Node({self.id})'
